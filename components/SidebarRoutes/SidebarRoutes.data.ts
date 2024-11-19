@@ -28,12 +28,12 @@ export const dataGeneralSidebar = [
 
 export const dataToolsSidebar = [
     {
-        con: CircleHelpIcon,
+        icon: CircleHelpIcon,
         label: "Faqs",
         href: "/faqs",
     },
     {
-        con: BarChart4,
+        icon: BarChart4,
         label: "Analytics",
         href: "/analytics",
     },
