@@ -23,6 +23,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { UploadButton } from "@/utils/uploadthing";
+import { useToast } from "@/hooks/use-toast"
 
 const formSchema = z.object({
     name: z.string(),
@@ -36,6 +38,7 @@ const formSchema = z.object({
 export function FormCreateCustomer(props: FormCreateCustomerProps) {
     const { setOpenModalCreate } = props;
     const [photoUploades, setPhotoUploades] = useState(false);
+    const { toast } = useToast()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -153,8 +156,37 @@ export function FormCreateCustomer(props: FormCreateCustomerProps) {
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="profileImage"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Profile Image</FormLabel>
+                                    <FormControl>
+                                        {photoUploades ? (
+                                            <p className="text-sm">Image uplodaded!</p>
+                                        ) : (
+                                            <UploadButton
+                                                    className="bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-2"
+                                                    {...field}
+                                                endpoint="profileImage"
+                                                onClientUploadComplete={(res) => {
+                                                    form.setValue("profileImage", res?.[0].url);
+                                                    toast({ title: "Photo uploaded!" })
+                                                    setPhotoUploades(true);
+                                                }}
+                                                onUploadError={(error: Error) => {
+                                                    toast({ title: "Error uploading photo" })
+                                                }}
+                                            />
+                                        )}
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" disabled={!isValid}>Submit</Button>
                 </form>
             </Form>
         </div>
