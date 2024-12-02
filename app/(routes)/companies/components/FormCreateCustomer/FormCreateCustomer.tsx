@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
+import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +25,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { UploadButton } from "@/utils/uploadthing";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     name: z.string(),
@@ -37,8 +39,9 @@ const formSchema = z.object({
 
 export function FormCreateCustomer(props: FormCreateCustomerProps) {
     const { setOpenModalCreate } = props;
+    const router = useRouter();
     const [photoUploades, setPhotoUploades] = useState(false);
-    const { toast } = useToast()
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -55,7 +58,17 @@ export function FormCreateCustomer(props: FormCreateCustomerProps) {
     const { isValid } = form.formState;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        try {
+            axios.post("/api/company", values);
+            toast({ title: "Company created!" });
+            router.refresh();
+            setOpenModalCreate(false);
+        } catch (error) {
+            toast({
+                title: "Something went wrong",
+                variant: "destructive",
+            });
+        }
     };
 
     return (
@@ -96,7 +109,7 @@ export function FormCreateCustomer(props: FormCreateCustomerProps) {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="spain">Spain</SelectItem>
+                                            <SelectItem value="spain">España</SelectItem>
                                             <SelectItem value="united-kingdom">
                                                 United Kingdom
                                             </SelectItem>
@@ -111,7 +124,7 @@ export function FormCreateCustomer(props: FormCreateCustomerProps) {
                         />
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="website"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>website</FormLabel>
@@ -167,16 +180,16 @@ export function FormCreateCustomer(props: FormCreateCustomerProps) {
                                             <p className="text-sm">Image uplodaded!</p>
                                         ) : (
                                             <UploadButton
-                                                    className="bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-2"
-                                                    {...field}
+                                                className="bg-slate-600/20 text-slate-800 rounded-lg outline-dotted outline-2"
+                                                {...field}
                                                 endpoint="profileImage"
                                                 onClientUploadComplete={(res) => {
                                                     form.setValue("profileImage", res?.[0].url);
-                                                    toast({ title: "Photo uploaded!" })
+                                                    toast({ title: "Photo uploaded!" });
                                                     setPhotoUploades(true);
                                                 }}
                                                 onUploadError={(error: Error) => {
-                                                    toast({ title: "Error uploading photo" })
+                                                    toast({ title: "Error uploading photo" });
                                                 }}
                                             />
                                         )}
