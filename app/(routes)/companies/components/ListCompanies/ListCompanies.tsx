@@ -1,7 +1,11 @@
-import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
+
 import { auth } from "@clerk/nextjs";
 
-import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
+
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 
 export async function ListCompanies() {
     const { userId } = auth();
@@ -19,7 +23,9 @@ export async function ListCompanies() {
         },
     });
 
-    console.log(companies);
-
-    return <div>ListCompanies</div>;
+    return (
+        <div>
+            <DataTable columns={columns} data={companies} />
+        </div>
+    );
 }
