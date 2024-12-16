@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -52,7 +53,18 @@ export function CompanyForm(props: CompanyFormProps) {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log("on submit");
+        try {
+            await axios.patch(`/api/company/${company.id}`, values);
+            toast({
+                title: "Company updated!",
+            })
+            router.refresh()
+        } catch (error) {
+            toast({
+                title: "Error editing company",
+                variant:"destructive"
+            })
+        }
     };
 
     return (
