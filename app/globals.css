@@ -8,6 +8,20 @@ body,
   height: 100%;
 }
 
+.calendar-container .fc .fc-button-primary{
+  background-color: black;
+}
+
+.calendar-container .fc .fc-button-primary:not(:disabled).fc-button-active{
+  background-color: #2E2E2E;
+}
+
+@media (max-width: 768px) {
+  .calendar-container .fc .fc-toolbar {
+    display: block;
+  }
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
