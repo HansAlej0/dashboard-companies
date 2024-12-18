@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -12,7 +11,10 @@ import listPlugin from "@fullcalendar/list";
 import multiMonthPlugin from "@fullcalendar/multimonth";
 import { DateSelectArg, EventContentArg } from "@fullcalendar/core/index.js";
 
+import axios from "axios";
+
 import { formDate } from "@/lib/formDate";
+
 import { useToast } from "@/hooks/use-toast";
 
 import { CalendarProps } from "./Calendar.types";
